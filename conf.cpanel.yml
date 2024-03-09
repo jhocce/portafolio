@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/jhocceco/repositories/portafolio
+    - /bin/cp pip install -r requirements.txt
+    - /bin/cp python manage.py runserver
