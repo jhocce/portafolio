@@ -8,8 +8,9 @@ from django.views.generic import ListView, View, RedirectView
 from io import BytesIO
 from django.http import HttpResponse
 from django.template.loader import get_template
-import pdfkit
+
 import os
+from sys import platform
 from django.template.loader import get_template 
 from django.template import Context
 import pdfkit
@@ -17,23 +18,7 @@ import pdfkit
 
 
 
-def render_to_pdf(template_src, context_dict={}):
-    template = get_template(template_src)
-    html  = template.render(context_dict)
-    result = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-    if pdf.err:
-        return HttpResponse("Invalid PDF", status_code=400, content_type='text/plain')
-    return HttpResponse(result.getvalue(), content_type='application/pdf')
 
-
-
-
-def pdf_view():
-    data = {
-        
-    }
-    return render_to_pdf('user/pdf.html', data)
 class cv( View):
 
 	template_name = 'user/cv.html'
@@ -59,9 +44,12 @@ class cvpdf(View):
 			'margin-bottom': '0.75in',
 			'margin-left': '0.75in',
 		}
-		path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
-		config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
-		pdfkit.from_url("localhost:8000", "out.pdf", configuration=config)
+		if platform=='linux':
+			pdfkit.from_url("localhost:8855", "out.pdf")
+		else:
+			path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+			config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+			pdfkit.from_url("localhost:8855", "out.pdf", configuration=config)
 		pdf = open("out.pdf",'rb')
 		response = HttpResponse(pdf.read(), content_type='application/pdf')  # Generates the response as pdf response.
 		response['Content-Disposition'] = 'attachment; filename=output.pdf'

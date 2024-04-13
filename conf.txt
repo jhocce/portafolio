@@ -1,0 +1,83 @@
+
+#!/bin/bash
+
+echo "lanzando server en puerto: "$1
+NAME="portafolio"$1                                # Name of the application
+DJANGODIR=/home/jhocce/portafolio            # Django project directory
+PID=/tmp/$NAME-gunicorn.pid
+SOCKFILE=0.0.0.0:$1             # we will communicte using this unix socket
+USER=jhocce                                        # the user to run as
+GROUP=jhocce                                     # the group to run as
+NUM_WORKERS=2                                     # how many worker processes should Gunicorn s>
+DJANGO_SETTINGS_MODULE=portafolio.settings             # which settings file should Django u>
+DJANGO_WSGI_MODULE=portafolio.wsgi                     # WSGI module name
+TIMEOUT=6000
+echo "Starting $NAME as `whoami`"
+# Activate the virtual environment
+cd $DJANGODIR
+source ../venv/bin/activate
+export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+export PYTHONPATH=$DJANGODIR:$PYTHONPATH
+# Create the run directory if it doesn't exist
+RUNDIR=$(dirname $SOCKFILE)
+test -d $RUNDIR || mkdir -p $RUNDIR
+
+# Start your Django Unicorn
+# Programs meant to be run under supervisor should not daemonize themselves (do not use --daemo>
+exec ../venv/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
+  --name $NAME \
+  --workers $NUM_WORKERS \
+  --user=$USER --group=$GROUP \
+  --pid $PID \
+  --bind=$SOCKFILE \
+  --timeout $TIMEOUT \
+  --log-level=debug \
+  --log-file=-
+
+
+[program:porafolio]
+command=bash /home/jhocce/dev/portafolio/gunicorn_start
+user=jhocce
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile=/home/jhocce/dev/portafolio/logs/logs.log
+stderr_logfile=/home/jhocce/dev/portafolio/logs/error.log
+
+
+upstream app_server {
+    server unix:/home/jhocce/dev/portafolio/run/gunicorn.sock fail_timeout=0;
+}
+
+server {
+    listen 80;
+
+    # add here the ip address of your server
+    # or a domain pointing to that ip (like example.com or www.example.com)
+    server_name localhost;
+
+    keepalive_timeout 5;
+    client_max_body_size 4G;
+
+    access_log /home/jhocce/dev/portafolio/logs/nginx-access.log;
+    error_log /home/jhocce/dev/portafolio/logs/nginx-error.log;
+
+    location /static/ {
+        alias /home/jhocce/dev/static/;
+    }
+
+    # checks for static file, if not found proxy to app
+    location / {
+        try_files $uri @proxy_to_app;
+    }
+
+    location @proxy_to_app {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_redirect off;
+      proxy_pass http://app_server;
+    }
+}
+
+
+sudo ln -s /etc/nginx/sites-available/portafolio /etc/nginx/sites-enabled/portafolio
