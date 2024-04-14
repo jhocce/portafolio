@@ -31,6 +31,4 @@ jobs:
           SSH_KEY: 25733034Jhocce
           run:
             mkdir pp
-            cd dev
-            cd portafolio
-            git pull
+            
