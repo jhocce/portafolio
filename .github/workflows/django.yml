@@ -22,14 +22,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
-      run: |
+      run: appleboy/ssh-action@master
         python manage.py test
     - name: Deploy to VPS
-      uses: appleboy/drone-ssh
+      uses: invi5H/ssh-action@v1.0.0
       with:
-          host: http://64.23.211.175
-          username: root
-          password: 25733034Jhocce
+
+          SSH_USER: root
+          SSH_HOST: http://64.23.211.175    
+          SSH_KEY: 25733034Jhocce
           script: |
             mkdir pp
             cd dev
