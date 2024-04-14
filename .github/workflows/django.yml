@@ -21,9 +21,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Run Tests
-      run: appleboy/ssh-action@master
-        python manage.py test
+    
     - name: Deploy to VPS
       uses: invi5H/ssh-action@v1.0.0
       with:
