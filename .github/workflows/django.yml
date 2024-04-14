@@ -27,7 +27,7 @@ jobs:
       with:
 
           SSH_USER: root
-          SSH_HOST: http://64.23.211.175    
+          SSH_HOST: 64.23.211.175    
           SSH_KEY: 25733034Jhocce
           script: |
             mkdir pp
