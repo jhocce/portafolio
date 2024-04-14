@@ -10,11 +10,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.9]
-
+   
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -31,10 +27,11 @@ jobs:
     - name: Deploy to VPS
       uses: appleboy/ssh-action@master
       with:
-          host: ${{ secrets.VPS_IP }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
+          host: http://64.23.211.175
+          username: root
+          password: 25733034Jhocce
           script: |
+            mkdir pp
             cd dev
             cd portafolio
             git pull
