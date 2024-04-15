@@ -3,8 +3,7 @@ name: Django CI
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  
 
 jobs:
   build:
@@ -30,6 +29,9 @@ jobs:
           password: ${{ secrets.PASS }}
           port: 22
           script: | 
-            mkdir popo
+            cd dev 
+            cd portafolio
+            git pull
+            sudo supervisorctl restart porafolio
             echo "Nice Job!!!"
-            
+            exit
