@@ -29,9 +29,9 @@ jobs:
           password: ${{ secrets.PASS }}
           port: 22
           script: | 
-            cd dev 
+            cd cv 
             cd portafolio
             git pull
-            sudo supervisorctl restart porafolio
+            sudo supervisorctl restart portafolio
             echo "Nice Job!!!"
             exit
