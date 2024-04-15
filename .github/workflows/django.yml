@@ -29,7 +29,7 @@ jobs:
           username: root
           password: 25733034Jhocce
           port: 22
-          run: | 
+          script: | 
             mkdir popo
             echo "Nice Job!!!"
             
