@@ -25,9 +25,9 @@ jobs:
     - name: Deploy to VPS
       uses:  appleboy/ssh-action@v1.0.3
       with:
-          host: 64.23.211.175
-          username: root
-          password: 25733034Jhocce
+          host: ${{ serverubu.SERVER }}
+          username: ${{ serverubu.USERNAME }}
+          password: ${{ serverubu.PASS }}
           port: 22
           script: | 
             mkdir popo
