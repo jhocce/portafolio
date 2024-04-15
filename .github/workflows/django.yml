@@ -23,14 +23,13 @@ jobs:
         pip install -r requirements.txt
     
     - name: Deploy to VPS
-      uses: appleboy/ssh-action@v0.1.10
+      uses:  appleboy/ssh-action@v1.0.3
       with:
           host: 64.23.211.175
           username: root
-          key: 25733034Jhocce
+          password: 25733034Jhocce
           port: 22
-         
-          script: | 
+          run: | 
             mkdir popo
             echo "Nice Job!!!"
             
