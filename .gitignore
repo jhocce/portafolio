@@ -3,3 +3,5 @@
 *.pyc
 *.env
 conf.txt
+
+stup.py
