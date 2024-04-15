@@ -19,6 +19,8 @@ import pdfkit
 
 
 
+
+
 class cv( View):
 
 	template_name = 'user/cv.html'
