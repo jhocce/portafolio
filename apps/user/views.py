@@ -54,7 +54,7 @@ class cvpdf(View):
 			pdfkit.from_url("localhost:8855", "out.pdf", configuration=config)
 		pdf = open("out.pdf",'rb')
 		response = HttpResponse(pdf.read(), content_type='application/pdf')  # Generates the response as pdf response.
-		response['Content-Disposition'] = 'attachment; filename=output.pdf'
+		response['Content-Disposition'] = 'attachment; filename=CV-JHOCCE_BRICEÑO_BACKEND-PYTHON.pdf'
 		pdf.close()
 		os.remove("out.pdf")  # remove the locally created pdf file.
 		return response  
